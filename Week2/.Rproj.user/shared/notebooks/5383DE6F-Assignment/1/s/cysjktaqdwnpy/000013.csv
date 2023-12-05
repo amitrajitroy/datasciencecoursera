@@ -1,8 +1,0 @@
-"0","source('pollutantmean.R')"
-"0","source('complete.R')"
-"0","source(""corr.R"")"
-"0","print(R.version.string)"
-"1","[1]"
-"1"," ""R version 4.3.0 (2023-04-21 ucrt)"""
-"1","
-"
