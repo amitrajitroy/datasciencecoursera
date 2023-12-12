@@ -35,6 +35,7 @@ rankhospital <- function(state, outcome, num) {
   slice <- subset(data, State == state)
   slice <- slice[order(slice[, index], na.last = TRUE), 2]
   slice <- na.omit(slice)
+  
   if (num == "best") {
     slice[1]
   } else if (num == "worst") {
@@ -44,4 +45,45 @@ rankhospital <- function(state, outcome, num) {
   } else {
     NA
   }
+}
+
+## Another implementation below to handle tie cases, as the tie cases seem to be missing in the above one
+
+rankhospital <- function(state, outcome, num = "best") {
+  ## Read outcome data
+  outcome <- read.csv("rprog_data_ProgAssignment3-data/outcome-of-care-measures.csv", colClasses = "character")
+  
+  ## Check that state and outcome are valid
+  if (!(state %in% data$State)) {
+    stop("invalid state")
+  }
+  if (!(outcome %in% c("heart attack", "heart failure", "pneumonia"))) {
+    stop("invalid outcome")
+  }
+  
+  ## Clean outcome data
+  outcome[, 11:16] <- lapply(outcome[, 11:16], as.numeric)
+  outcome[, 17:22] <- lapply(outcome[, 17:22], as.numeric)
+  
+  ## Subset data
+  outcome <- outcome[outcome[,"State"] == state, ]
+  outcome <- outcome[!is.na(outcome[, outcome]), ]
+  
+  ## Determine rank
+  if (num == "best") {
+    rank <- 1
+  } else if (num == "worst") {
+    rank <- nrow(outcome_data)
+  } else {
+    rank <- as.numeric(num)
+  }
+  
+  
+  ## Check that rank is valid
+  if (rank > nrow(outcome_data)) {
+    return(NA)
+  }
+  
+  ## Return hospital name
+  return(outcome[rank, "Hospital.Name"])
 }
